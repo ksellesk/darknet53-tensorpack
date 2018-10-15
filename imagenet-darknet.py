@@ -84,6 +84,9 @@ if __name__ == '__main__':
     parser.add_argument('--load', help='load a model for training or evaluation')
     parser.add_argument('--fake', help='use FakeData to debug or benchmark this model', action='store_true')
     parser.add_argument('--use-fp16', help='use float16', action='store_true')
+    parser.add_argument('--quant', help='quant training', action='store_true')
+    parser.add_argument('--quant-bit-actn', default=8, type=int)
+    parser.add_argument('--quant-bit-weight', default=1, type=int)
     parser.add_argument('--data-format', help='image data format',
                         default='NHWC', choices=['NCHW', 'NHWC'])
     parser.add_argument('--eval', action='store_true', help='run offline evaluation instead of training')
@@ -96,7 +99,11 @@ if __name__ == '__main__':
     if args.gpu:
         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
-    model = Model(args.use_fp16)
+    bit_actn, bit_weight = None, None
+    if args.quant:
+        bit_actn, bit_weight = args.quant_bit_actn, args.quant_bit_weight
+
+    model = Model(args.use_fp16, bit_actn, bit_weight)
     model.data_format = args.data_format
     if args.eval:
         batch = 128    # something that can run on one gpu
