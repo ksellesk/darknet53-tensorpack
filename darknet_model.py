@@ -3,9 +3,8 @@
 
 import tensorflow as tf
 
-from tensorpack.common import layer_register
 from tensorpack.tfutils.argscope import argscope, get_arg_scope
-from tensorpack.models import (
+from tensorpack.models import (layer_register,
     Conv2D, GlobalAvgPooling, BatchNorm, FullyConnected)
 
 from imagenet_utils import ImageNetModel
